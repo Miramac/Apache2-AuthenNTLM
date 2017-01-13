@@ -501,12 +501,12 @@ sub handler : method
     $| = 1 ;
     select ($fh) ;
 
-    my $addr = $conn -> remote_addr -> ip_get ;
-    my $port = $conn -> remote_addr -> port ;
+    my $addr = $conn -> client_addr -> ip_get ;
+    my $port = $conn -> client_addr -> port ;
     
     print STDERR "[$$] AuthenNTLM: Start NTLM Authen handler pid = $$, connection = " 
 	. "$$conn conn_http_hdr = $connhdr  main = " . ($r -> main) 
-	. " cuser = " . $r -> user . ' remote_ip = ' . $conn -> remote_ip 
+	. " cuser = " . $r -> user . ' remote_ip = ' . $conn -> client_ip 
 	. " remote_port = " . unpack('n', $port) . ' remote_host = <' 
 	. $conn -> remote_host . "> version = $VERSION "
 	. "smbhandle = " . $self -> {smbhandle} . "\n" if ($debug) ;
@@ -542,7 +542,7 @@ sub handler : method
 	    my $content_len = $r->headers_in->{'content-length'} ;
 	    my $method      = $r -> method ;
 	    print STDERR "[$$] AuthenNTLM: Same connection pid = $$, connection = $$conn cuser = " .
-		$r -> user . ' ip = ' . $conn -> remote_ip . ' method = ' . 
+		$r -> user . ' ip = ' . $conn -> client_ip . ' method = ' . 
 		$method . ' Content-Length = ' .
 		$content_len . ' type = ' . $type . "\n" if ($debug) ;
 	     
@@ -670,7 +670,7 @@ sub handler : method
     $self->{ok} = 1 ;
 
     print STDERR "[$$] AuthenNTLM: OK pid = $$, connection = $$conn cuser = " . $r -> user
-	. ' ip = ' . $conn -> remote_ip . "\n" if ($debug) ;
+	. ' ip = ' . $conn -> client_ip . "\n" if ($debug) ;
 
     return Apache2::Const::OK ;
 }
